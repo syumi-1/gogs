@@ -25,6 +25,8 @@ jobs:
             echo "GOARCH=$GOARCH" >> $GITHUB_ENV
       - name: 编译方式
         run: go build -o "$BINARY_NAME" -v
+      - name: 检查目录
+        run: ls -al
       - name: 上传Artifact
         uses: actions/upload-artifact@v4
         with:
