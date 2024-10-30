@@ -19,10 +19,12 @@ jobs:
         run: |
             GOOS=windows
             GOARCH=amd64
+            CGO_ENABLED=1
             BINARY_NAME=gogs-$GOOS-$GOARCH
             echo "BINARY_NAME=$BINARY_NAME" >> $GITHUB_ENV
             echo "GOOS=$GOOS" >> $GITHUB_ENV
             echo "GOARCH=$GOARCH" >> $GITHUB_ENV
+            echo "CGO_ENABLED=$CGO_ENABLED" >> $GITHUB_ENV
       - name: 编译方式
         run: go build -o "$BINARY_NAME" -v
       - name: 拷贝目录
