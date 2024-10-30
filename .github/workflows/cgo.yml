@@ -33,12 +33,13 @@ jobs:
             pwd          
       - name: 拷贝目录
         run: |
+            tar –cvf build.tar ./build
             mkdir -p ~/new/artifact
-            cp -f -r ./build ~/new/artifact
+            cp -f -r ./build.tar ~/new/artifact
 
       - name: 上传Artifact
         uses: actions/upload-artifact@v4
         with:
           name: my-artifacts
-          path: /home/runner/work/gogs/gogs/build
+          path: ~/new
           retention-days: 1
