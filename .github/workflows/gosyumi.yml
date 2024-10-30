@@ -7,33 +7,27 @@ on:
   workflow_dispatch:
 
 jobs:
-
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
-    
-    - uses: actions/checkout@v4
-
-    - name: 准备GO环境
-      uses: actions/setup-go@v5
-      with:
-        go-version: '1.23.x'
-        
-    - name: 设置环境变量
-      run: |
-          GOOS=windows
-          GOARCH=amd64
-          BINARY_NAME=gogs-$GOOS-$GOARCH
-          echo "BINARY_NAME=$BINARY_NAME" >> $GITHUB_ENV
-          echo "GOOS=$GOOS" >> $GITHUB_ENV
-          echo "GOARCH=$GOARCH" >> $GITHUB_ENV
-
-    - name: 编译方式1
-      run: go build -o "$BINARY_NAME" -v
-      
-    - name: 上传Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: gogs
-        path: "$BINARY_NAME"
-        retention-days: 1
+      - uses: actions/checkout@v4
+      - name: 准备GO环境
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.x'
+      - name: 设置环境变量
+        run: |
+            GOOS=windows
+            GOARCH=amd64
+            BINARY_NAME=gogs-$GOOS-$GOARCH
+            echo "BINARY_NAME=$BINARY_NAME" >> $GITHUB_ENV
+            echo "GOOS=$GOOS" >> $GITHUB_ENV
+            echo "GOARCH=$GOARCH" >> $GITHUB_ENV
+      - name: 编译方式
+        run: go build -o "$BINARY_NAME" -v
+      - name: 上传Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gogs
+          path: "$BINARY_NAME"
+          retention-days: 1
