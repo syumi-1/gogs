@@ -33,10 +33,8 @@ jobs:
             pwd          
       - name: 拷贝目录
         run: |
-            tar –cvf build.tar ./build
             mkdir -p ~/new/artifact
-            cp -f -r ./build.tar ~/new/artifact
-
+            tar -cvf ~/new/artifact/build.tar ./build
       - name: 上传Artifact
         uses: actions/upload-artifact@v4
         with:
