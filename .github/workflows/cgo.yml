@@ -1,0 +1,44 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+name: SyumiCGO编译
+
+on:
+  workflow_dispatch:
+
+jobs:
+  xgo:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: 签出
+        uses: actions/checkout@v4
+      -
+        name: 准备环境
+        uses: crazy-max/ghaction-xgo@v3
+        with:
+          xgo_version: latest
+          go_version: 1.23.x
+          dest: build
+          targets: windows/amd64
+          v: true
+          x: false
+          race: false
+          ldflags: -s -w
+          buildmode: default
+          trimpath: true
+      - name: 检查目录
+        run: |
+            ls -al
+            pwd          
+      - name: 拷贝目录
+        run: |
+            mkdir -p ~/new/artifact
+            cp -f -r./build ~/new/artifact
+
+      - name: 上传Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-artifacts
+          path: ~/new/**/*
+          retention-days: 1
