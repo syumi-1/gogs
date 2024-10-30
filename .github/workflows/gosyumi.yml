@@ -25,11 +25,17 @@ jobs:
             echo "GOARCH=$GOARCH" >> $GITHUB_ENV
       - name: 编译方式
         run: go build -o "$BINARY_NAME" -v
+      - name: 拷贝目录
+        run: |
+            mkdir -p ~/new/artifact
+            cp -f ./"$BINARY_NAME" ~/new/artifact
       - name: 检查目录
-        run: ls -al
+        run: |
+            ls -al
+            pwd
       - name: 上传Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: gogs
-          path: "$BINARY_NAME"
+          name: my-artifacts
+          path: ~/new/**/*
           retention-days: 1
