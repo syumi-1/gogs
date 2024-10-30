@@ -29,7 +29,7 @@ jobs:
           trimpath: true
       - name: 检查目录
         run: |
-            ls -al
+            ls -Ral
             pwd          
       - name: 拷贝目录
         run: |
