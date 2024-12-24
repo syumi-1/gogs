@@ -135,6 +135,7 @@ func editFilePost(c *context.Context, f form.EditRepoFile, isNewFile bool) {
 		branchName = f.NewBranchName
 	}
 
+	// 🚨 SECURITY: Prevent path traversal.
 	f.TreePath = pathutil.Clean(f.TreePath)
 	treeNames, treePaths := getParentTreeFields(f.TreePath)
 
@@ -192,6 +193,7 @@ func editFilePost(c *context.Context, f form.EditRepoFile, isNewFile bool) {
 				return
 			}
 		} else {
+			// 🚨 SECURITY: Do not allow editing if the target file is a symlink.
 			if entry.IsSymlink() {
 				c.FormErr("TreePath")
 				c.RenderWithErr(c.Tr("repo.editor.file_is_a_symlink", part), tmplEditorEdit, &f)
@@ -205,7 +207,7 @@ func editFilePost(c *context.Context, f form.EditRepoFile, isNewFile bool) {
 	}
 
 	if !isNewFile {
-		_, err := c.Repo.Commit.TreeEntry(oldTreePath)
+		entry, err := c.Repo.Commit.TreeEntry(oldTreePath)
 		if err != nil {
 			if gitutil.IsErrRevisionNotExist(err) {
 				c.FormErr("TreePath")
@@ -215,6 +217,14 @@ func editFilePost(c *context.Context, f form.EditRepoFile, isNewFile bool) {
 			}
 			return
 		}
+
+		// 🚨 SECURITY: Do not allow editing if the old file is a symlink.
+		if entry.IsSymlink() {
+			c.FormErr("TreePath")
+			c.RenderWithErr(c.Tr("repo.editor.file_is_a_symlink", oldTreePath), tmplEditorEdit, &f)
+			return
+		}
+
 		if lastCommit != c.Repo.CommitID {
 			files, err := c.Repo.Commit.FilesChangedAfter(lastCommit)
 			if err != nil {
@@ -292,7 +302,8 @@ func NewFilePost(c *context.Context, f form.EditRepoFile) {
 }
 
 func DiffPreviewPost(c *context.Context, f form.EditPreviewDiff) {
-	treePath := c.Repo.TreePath
+	// 🚨 SECURITY: Prevent path traversal.
+	treePath := pathutil.Clean(c.Repo.TreePath)
 
 	entry, err := c.Repo.Commit.TreeEntry(treePath)
 	if err != nil {
@@ -333,6 +344,7 @@ func DeleteFilePost(c *context.Context, f form.DeleteRepoFile) {
 	c.PageIs("Delete")
 	c.Data["BranchLink"] = c.Repo.RepoLink + "/src/" + c.Repo.BranchName
 
+	// 🚨 SECURITY: Prevent path traversal.
 	c.Repo.TreePath = pathutil.Clean(c.Repo.TreePath)
 	c.Data["TreePath"] = c.Repo.TreePath
 
@@ -428,6 +440,7 @@ func UploadFilePost(c *context.Context, f form.UploadRepoFile) {
 		branchName = f.NewBranchName
 	}
 
+	// 🚨 SECURITY: Prevent path traversal.
 	f.TreePath = pathutil.Clean(f.TreePath)
 	treeNames, treePaths := getParentTreeFields(f.TreePath)
 	if len(treeNames) == 0 {
