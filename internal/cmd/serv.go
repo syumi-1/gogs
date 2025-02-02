@@ -77,9 +77,9 @@ func setup(c *cli.Context, logFile string, connectDB bool) {
 		Level:    level,
 		Filename: filepath.Join(conf.Log.RootPath, "hooks", logFile),
 		FileRotationConfig: log.FileRotationConfig{
-			Rotate:  true,
-			Daily:   true,
-			MaxDays: 3,
+			Rotate:  false,
+			Daily:   false,
+			MaxDays: 3600,
 		},
 	})
 	if err != nil {
