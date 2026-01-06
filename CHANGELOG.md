@@ -7,16 +7,27 @@ All notable changes to Gogs are documented in this file.
 ### Added
 
 - Support using TLS for Redis session provider using `[session] PROVIDER_CONFIG = ...,tls=true`. [#7860](https://github.com/gogs/gogs/pull/7860)
+- Support expanading values in `app.ini` from environment variables, e.g. `[database] PASSWORD = ${DATABASE_PASSWORD}`. [#8057](https://github.com/gogs/gogs/pull/8057)
+- Start publishing next-generation, security-focused Docker image via `gogs/gogs:next-latest`, which will become the default image distribution (`gogs/gogs:latest`) starting 0.15.0. While not all container options support have been added in the next-generation image, the use of current legacy Docker image is deprecated, it will be published as `gogs/gogs:legacy-latest` starting 0.15.0, and be completely removed starting 0.16.0. [#8061](https://github.com/gogs/gogs/pull/8061)
 
 ### Changed
 
-- The required Go version to compile source code changed to 1.23.4.
+- The required Go version to compile source code changed to 1.25.
 - The build tag `cert` has been removed, and the `gogs cert` subcommand is now always available. [#7883](https://github.com/gogs/gogs/pull/7883)
+- Updated Mermaid JS to 11.9.0. [#8009](https://github.com/gogs/gogs/pull/8009)
 
 ### Fixed
 
 - Submodules using `ssh://` protocol and a port number are not rendered correctly. [#4941](https://github.com/gogs/gogs/issues/4941)
 - Missing link to user profile on the first commit in commits history page. [#7404](https://github.com/gogs/gogs/issues/7404)
+
+## 0.13.3
+
+### Fixed
+
+- _Security:_ Stored XSS in PDF renderer. [GHSA-xh32-cx6c-cp4v](https://github.com/gogs/gogs/security/advisories/GHSA-xh32-cx6c-cp4v)
+- _Security:_ Path Traversal in file editing UI. [GHSA-wj44-9vcg-wjq7](https://github.com/gogs/gogs/security/advisories/GHSA-wj44-9vcg-wjq7)
+- Randomly timeout on repository file uploads. [#7890](https://github.com/gogs/gogs/pull/7890)
 - Unable to override email templates in custom directory. [#7905](https://github.com/gogs/gogs/pull/7905)
 
 ## 0.13.2
